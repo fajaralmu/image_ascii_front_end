@@ -16,7 +16,9 @@ export default class Characterizer extends BaseComponent {
         this.state = {
             imageData: null,
             colorFilters: {},
-            colorReducers: {}
+            colorReducers: {},
+            result: null,
+            resultFontSize: 1
         }
         this.characterizerService = ImageCharacterizerService.instance;
 
@@ -26,7 +28,8 @@ export default class Characterizer extends BaseComponent {
             colorFilters[index] = {
                 //l:colorFilters.length,
                 index: index,
-                character:"o",
+                character: "o",
+                useTemplateCharacter: false,
                 red: { min: 0, max: 0 },
                 green: { min: 0, max: 0 },
                 blue: { min: 0, max: 0 }
@@ -42,10 +45,22 @@ export default class Characterizer extends BaseComponent {
                 red: 0,
                 green: 0,
                 blue: 0,
-                hex:null,
-                
+                hex: null,
+                resultFontSize: 1
+
             };
             this.setState({ colorReducers: colorReducers });
+        }
+
+        this.increaseResultFontSize = () => {
+            let resultFontSize = this.state.resultFontSize;
+            resultFontSize += 0.1;
+            this.setState({ resultFontSize: resultFontSize });
+        }
+        this.reduceResultFontSize = () => {
+            let resultFontSize = this.state.resultFontSize;
+            resultFontSize -= 0.1;
+            this.setState({ resultFontSize: resultFontSize });
         }
 
         this.removeColorFilter = (index) => {
@@ -153,9 +168,10 @@ export default class Characterizer extends BaseComponent {
 
         this.handleSuccess = (response) => {
             this.showInfo("Success");
+            this.setState({ result: response });
         }
         this.handleError = (e) => {
-            this.showError("Error: "+e);
+            this.showError("Error: " + e);
             console.error(e);
         }
 
@@ -163,12 +179,12 @@ export default class Characterizer extends BaseComponent {
             const colorFilters = this.getColorFilterPayloads();
             const colorReducers = this.getColorReducerPayloads();
             const request = {
-                colorFilters:colorFilters,
-                colorReducers:colorReducers,
-                imageData:this.state.imageData
+                colorFilters: colorFilters,
+                colorReducers: colorReducers,
+                imageData: this.state.imageData
             }
             this.commonAjax(
-                this.characterizerService.characterize,request,
+                this.characterizerService.characterize, request,
                 this.handleSuccess,
                 this.handleError
             )
@@ -191,13 +207,13 @@ export default class Characterizer extends BaseComponent {
                 if (colorFilters.hasOwnProperty(key)) {
                     const element = colorFilters[key];
                     //min
-                    document.getElementsByName(PREFIX+key+"_min_rgb")[0].value = element.hexMin;
-                    document.getElementsByName(PREFIX+key+"_max_rgb")[0].value = element.hexMax;
-                    document.getElementsByName(PREFIX+key+"_character")[0].value = element.character;
-                    
+                    document.getElementsByName(PREFIX + key + "_min_rgb")[0].value = element.hexMin;
+                    document.getElementsByName(PREFIX + key + "_max_rgb")[0].value = element.hexMax;
+                    document.getElementsByName(PREFIX + key + "_character")[0].value = element.character;
+
                 }
             }
-            
+
             //reducers
             const colorReducers = this.state.colorReducers;
             const PREFIX_RED = "color_reducer_"
@@ -205,8 +221,8 @@ export default class Characterizer extends BaseComponent {
                 if (colorReducers.hasOwnProperty(key)) {
                     const element = colorReducers[key];
                     //min
-                    document.getElementsByName(PREFIX_RED+key)[0].value = element.hex;
-                    
+                    document.getElementsByName(PREFIX_RED + key)[0].value = element.hex;
+
                 }
             }
         }
@@ -236,28 +252,29 @@ export default class Characterizer extends BaseComponent {
                                         const filter = this.state.colorFilters[key];
                                         const index = filter.index;
                                         return (
-                                            <Card key={"card_filter_"+uniqueId()} title={"Filter #" + (i + 1)}
+                                            <Card key={"card_filter_" + uniqueId()} title={"Filter #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorFilter(index)} >
                                                 <Columns cells={[
                                                     <InputField attributes={{ index: index + "_min", onChange: this.updateColorFilter }} orientation="vertical" name={"color_filter_" + index + "_min_rgb"} type="color" />
                                                     , <InputField attributes={{ index: index + "_max", onChange: this.updateColorFilter }} orientation="vertical" name={"color_filter_" + index + "_max_rgb"} type="color" />
                                                 ]} />
-                                                <InputField  
-                                                name={"color_filter_"+index+"_character"}
-                                                attributes={{
-                                                    index: index,
-                                                    onKeyUp: this.updateFilterCharacter
-                                                }}
-                                                label="character" name={"color_filter_" + index + "_character"} />
-                                                <Columns cells={[
-                                                    <p><b>R</b>|min: {filter.red.min} max: {filter.red.max}</p>,
-                                                    <p><b>G</b>|min:{filter.green.min} max: {filter.green.max}</p>,
-                                                    <p><b>B</b>|min: {filter.blue.min}  max: {filter.blue.max}</p>]} />
+                                                <InputField
+                                                    name={"color_filter_" + index + "_character"}
+                                                    attributes={{
+                                                        index: index,
+                                                        onKeyUp: this.updateFilterCharacter
+                                                    }}
+                                                    label="character" name={"color_filter_" + index + "_character"} />
+                                                <div className="tags has-addons">
+                                                    <span className="tag is-danger"><b>R</b>|min: {filter.red.min} max: {filter.red.max}</span>
+                                                    <span className="tag is-primary"><b>G</b>|min:{filter.green.min} max: {filter.green.max}</span>
+                                                    <span className="tag is-info"><b>B</b>|min: {filter.blue.min}  max: {filter.blue.max}</span>
+                                                </div>
                                             </Card>)
                                     })}
                                 </div>
-                                <LabelField><AnchorWithIcon onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
+                                <LabelField><AnchorWithIcon className="is-primary" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
                                 <div className="field">
                                     <p>Color Reducers</p>
 
@@ -265,7 +282,7 @@ export default class Characterizer extends BaseComponent {
                                         const filter = this.state.colorReducers[key];
                                         const index = filter.index;
                                         return (
-                                            <Card key={"card_Reducers_"+uniqueId()} title={"Filter #" + (i + 1)}
+                                            <Card key={"card_Reducers_" + uniqueId()} title={"Filter #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorReducer(index)} >
 
@@ -280,7 +297,7 @@ export default class Characterizer extends BaseComponent {
                                     })}
 
                                 </div>
-                                <LabelField><AnchorWithIcon onClick={this.addColorReducer} iconClassName="fas fa-plus">Add Reducer Color</AnchorWithIcon></LabelField>
+                                <LabelField><AnchorWithIcon className="is-warning" onClick={this.addColorReducer} iconClassName="fas fa-plus">Add Reducer Color</AnchorWithIcon></LabelField>
                                 <SubmitResetButton />
                             </form>
                         </div>
@@ -295,8 +312,24 @@ export default class Characterizer extends BaseComponent {
                         </div>
                     </div>
                 </Card>
-                {JSON.stringify(this.getColorFilterPayloads())}
-                {JSON.stringify(this.getColorReducerPayloads())}
+                <Card title="Result">
+
+                    {this.state.result ?
+                        <>
+                            <AnchorWithIcon onClick={this.increaseResultFontSize} iconClassName="fas fa-plus">Zoom In</AnchorWithIcon>
+                            <AnchorWithIcon onClick={this.reduceResultFontSize} iconClassName="fas fa-minus">Zoom Out</AnchorWithIcon>
+
+                            <div style={{ overflow: 'scroll', fontFamily: 'monospace' }}>
+
+                                {this.state.resultFontSize}
+                                <div style={{ fontSize: this.state.resultFontSize + 'em' }} >
+                                    <p dangerouslySetInnerHTML={{ __html: this.state.result.imageData }}></p>
+                                </div>
+                            </div>
+                        </>
+                        : "No Result"}
+
+                </Card>
             </Section>
         )
     }
