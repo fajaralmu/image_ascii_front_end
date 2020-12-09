@@ -15,10 +15,35 @@ export default class Characterizer extends BaseComponent {
         super(props, false);
         this.state = {
             imageData: null,
-            colorFilters: {},
-            colorReducers: {},
+            colorFilters: {1:{
+                //l:colorFilters.length,
+                index: 1,
+                character: "o",
+                useTemplateCharacter: false,
+                red: { min: 0, max: 0 },
+                green: { min: 0, max: 0 },
+                blue: { min: 0, max: 0 },
+                hexMax: '#000000',
+                hexMin: '#000000',
+            }, 
+            2: {
+                //l:colorFilters.length,
+                index: 2,
+                character: "-",
+                useTemplateCharacter: false,
+                red: { min: 255, max: 255 },
+                green: { min: 255, max: 255 },
+                blue: { min: 255, max: 255 },
+                hexMax: '#ffffff',
+                hexMin: '#ffffff',
+            }},
+            colorReducers: {
+                1: {index: 1, red: 0, green: 0, blue: 0, hex: '#000000'},
+                2: {index: 2, red: 255, green: 255, blue: 255, hex: '#ffffff'},
+                },
             result: null,
-            resultFontSize: 1
+            resultFontSize: 1,
+            percentage: 17
         }
         this.characterizerService = ImageCharacterizerService.instance;
 
@@ -41,12 +66,7 @@ export default class Characterizer extends BaseComponent {
             const index = this.getMaxColorReducersID() + 1;
             colorReducers[index] = {
                 //l:colorFilters.length,
-                index: index,
-                red: 0,
-                green: 0,
-                blue: 0,
-                hex: null,
-                resultFontSize: 1
+                index: index, red: 0, green: 0, blue: 0, hex: null,
 
             };
             this.setState({ colorReducers: colorReducers });
@@ -147,6 +167,7 @@ export default class Characterizer extends BaseComponent {
             }
             return max;
         }
+        
 
         this.characterize = (e) => {
             e.preventDefault();
@@ -181,13 +202,18 @@ export default class Characterizer extends BaseComponent {
             const request = {
                 colorFilters: colorFilters,
                 colorReducers: colorReducers,
-                imageData: this.state.imageData
+                imageData: this.state.imageData,
+                percentage: this.state.percentage
             }
             this.commonAjax(
                 this.characterizerService.characterize, request,
                 this.handleSuccess,
                 this.handleError
             )
+        }
+
+        this.changePercentage = (e) => {
+            this.setState({percentage:e.target.value});
         }
 
         this.getColorReducerPayloads = () => {
@@ -200,6 +226,10 @@ export default class Characterizer extends BaseComponent {
             return objectToArray(colorFilters);
         }
         this.setInputValuesFromState = () => {
+            //general
+            if (null!=document.getElementById("input-form-field-percentage"))
+                document.getElementById("input-form-field-percentage").value = this.state.percentage;
+
             //filter
             const colorFilters = this.state.colorFilters;
             const PREFIX = "color_filter_"
@@ -221,7 +251,9 @@ export default class Characterizer extends BaseComponent {
                 if (colorReducers.hasOwnProperty(key)) {
                     const element = colorReducers[key];
                     //min
-                    document.getElementsByName(PREFIX_RED + key)[0].value = element.hex;
+                    if (document.getElementsByName(PREFIX_RED + key)[0]) {
+                        document.getElementsByName(PREFIX_RED + key)[0].value = element.hex;
+                    }
 
                 }
             }
@@ -246,8 +278,12 @@ export default class Characterizer extends BaseComponent {
                                     accept: 'image/*',
                                     onChange: this.fileOnChange
                                 }} />
+                                <InputField required={true}  type="number" label="Percentage" name="percentage" attributes={{
+                                    min:0,
+                                    onChange: this.changePercentage
+                                }} />
                                 <div className="field">
-                                    <p>Color Filters</p>
+                                    <p className="has-text-centered has-background-light">Color Filters</p>
                                     {Object.keys(this.state.colorFilters).map((key, i) => {
                                         const filter = this.state.colorFilters[key];
                                         const index = filter.index;
@@ -267,16 +303,16 @@ export default class Characterizer extends BaseComponent {
                                                     }}
                                                     label="character" name={"color_filter_" + index + "_character"} />
                                                 <div className="tags has-addons">
-                                                    <span className="tag is-danger"><b>R</b>|min: {filter.red.min} max: {filter.red.max}</span>
-                                                    <span className="tag is-primary"><b>G</b>|min:{filter.green.min} max: {filter.green.max}</span>
-                                                    <span className="tag is-info"><b>B</b>|min: {filter.blue.min}  max: {filter.blue.max}</span>
+                                                    <span className="tag is-danger">min: {filter.red.min} max: {filter.red.max}</span>
+                                                    <span className="tag is-primary">min:{filter.green.min} max: {filter.green.max}</span>
+                                                    <span className="tag is-info">min: {filter.blue.min}  max: {filter.blue.max}</span>
                                                 </div>
                                             </Card>)
                                     })}
                                 </div>
-                                <LabelField><AnchorWithIcon className="is-primary" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
+                                <LabelField><AnchorWithIcon className="is-light" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
                                 <div className="field">
-                                    <p>Color Reducers</p>
+                                    <p className="has-text-centered has-background-warning">Color Reducers</p>
 
                                     {Object.keys(this.state.colorReducers).map((key, i) => {
                                         const filter = this.state.colorReducers[key];
@@ -286,12 +322,13 @@ export default class Characterizer extends BaseComponent {
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorReducer(index)} >
 
-                                                <InputField attributes={{ index: index, onChange: this.updateColorReducer }} orientation="horizontal" label="color" name={"color_reducer_" + index} type="color" />
+                                                <InputField attributes={{ index: index, onChange: this.updateColorReducer }} 
+                                                orientation="horizontal" label="color" name={"color_reducer_" + index} type="color" />
 
                                                 <div className="tags has-addons">
-                                                    <span className="tag is-danger"><b>Red</b>&nbsp;&nbsp; {filter.red} </span>
-                                                    <span className="tag is-primary"><b>Green</b>&nbsp;&nbsp; {filter.green} </span>
-                                                    <span className="tag is-info"><b>Blue</b>&nbsp;&nbsp; {filter.blue} </span>
+                                                    <span className="tag is-danger"> {filter.red} </span>
+                                                    <span className="tag is-primary"> {filter.green} </span>
+                                                    <span className="tag is-info">  {filter.blue} </span>
                                                 </div>
                                             </Card>)
                                     })}
