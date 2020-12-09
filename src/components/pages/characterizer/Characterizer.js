@@ -129,7 +129,8 @@ export default class Characterizer extends BaseComponent {
         this.updateColorReducer = (e) => {
 
             const colorReducers = this.state.colorReducers;
-            const target = e.target;
+            const id = e.target.id;
+            const target = document.getElementById(id);
             const index = target.getAttribute("index");
             const hex = target.value;
             const rgb = hexToRgb(hex);
@@ -284,10 +285,12 @@ export default class Characterizer extends BaseComponent {
                                 }} />
                                 <div className="field">
                                     <p className="has-text-centered has-background-light">Color Filters</p>
+                                     
                                     {Object.keys(this.state.colorFilters).map((key, i) => {
                                         const filter = this.state.colorFilters[key];
                                         const index = filter.index;
                                         return (
+                                            
                                             <Card key={"card_filter_" + uniqueId()} title={"Filter #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorFilter(index)} >
@@ -296,7 +299,6 @@ export default class Characterizer extends BaseComponent {
                                                     , <InputField label="max" attributes={{ index: index + "_max", onChange: this.updateColorFilter }}  name={"color_filter_" + index + "_max_rgb"} type="color" />
                                                 ]} />
                                                 <InputField
-                                                    name={"color_filter_" + index + "_character"}
                                                     attributes={{
                                                         index: index,
                                                         onKeyUp: this.updateFilterCharacter
@@ -307,17 +309,20 @@ export default class Characterizer extends BaseComponent {
                                                     <span className="tag is-primary">min:{filter.green.min} max: {filter.green.max}</span>
                                                     <span className="tag is-info">min: {filter.blue.min}  max: {filter.blue.max}</span>
                                                 </div>
-                                            </Card>)
+                                            </Card>
+                                            )
                                     })}
+                                     
                                 </div>
                                 <LabelField><AnchorWithIcon className="is-light" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
                                 <div className="field">
                                     <p className="has-text-centered has-background-warning">Color Reducers</p>
-
+                                    <div className="columns is-multiline">
                                     {Object.keys(this.state.colorReducers).map((key, i) => {
                                         const filter = this.state.colorReducers[key];
                                         const index = filter.index;
                                         return (
+                                            <div className="column is-half">
                                             <Card key={"card_Reducers_" + uniqueId()} title={"Reducer #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorReducer(index)} >
@@ -330,9 +335,10 @@ export default class Characterizer extends BaseComponent {
                                                     <span className="tag is-primary"> {filter.green} </span>
                                                     <span className="tag is-info">  {filter.blue} </span>
                                                 </div>
-                                            </Card>)
+                                            </Card>
+                                            </div>)
                                     })}
-
+                                    </div>
                                 </div>
                                 <LabelField><AnchorWithIcon className="is-warning" onClick={this.addColorReducer} iconClassName="fas fa-plus">Add Reducer Color</AnchorWithIcon></LabelField>
                                 <SubmitResetButton />
