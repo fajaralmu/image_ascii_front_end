@@ -1,0 +1,6 @@
+#my-message{
+    /* position: fixed; */
+    z-index: 1000;
+    width: max-content;
+    margin:auto;
+}

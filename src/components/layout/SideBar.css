@@ -1,0 +1,25 @@
+/* $menu-item-hover-background-color: #ccc; */
+@media screen and (max-width: 1087px) {
+    .menu-container {
+      display: none;
+    }
+}
+@media screen and (min-width: 1088px) {
+      .menu-container {
+      display: block;
+    }
+}
+@media screen and (min-width: 1088px) {
+      .navbar-start {
+      display: none;
+    }
+}
+
+.menu-label{
+  cursor: pointer;
+}
+ 
+/* .menu-container{
+  border-right: 1px;
+  border-right-color: cornflowerblue;
+} */
