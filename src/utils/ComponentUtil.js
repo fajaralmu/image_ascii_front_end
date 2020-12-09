@@ -22,13 +22,21 @@ export const clearFields = (...ignoredIds) => {
     }
 }
 
-export function toBase64(file, referer, callback) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file.files[0]);
-    reader.onload = () => callback(reader.result, referer);
-    reader.onerror = error => {
-        alert("Error Loading File");
-    }
+
+export function toBase64v2(fileInput) {
+    return new Promise(function(resolve, reject){
+        try{
+            const reader = new FileReader();
+            reader.readAsDataURL(fileInput.files[0]);
+            reader.onload = function() { resolve(reader.result); }
+            reader.onerror = function(error) {
+                reject(error);
+            }
+        }catch(e){
+            reject(e);
+        }
+    });
+   
 }
 
 export const checkExistance = function (...ids) {

@@ -38,7 +38,7 @@ class Header extends BaseMenus {
                 <div className="container">
                     <div className="navbar-brand">
                         <Link style={{ backgroundColor: '#fff' }} className="navbar-item" to="/">
-                            <img src="kiis-stroke.png" width="38" height="38" />
+                            <img src="NCv2.png" width="38" height="38" />
                         </Link>
                         <div onClick={this.toggleNavBurger} className="navbar-burger burger">
                             <span></span>

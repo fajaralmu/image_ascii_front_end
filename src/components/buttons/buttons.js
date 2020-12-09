@@ -8,7 +8,7 @@ export const AnchorWithIcon = (props) => {
             <span className="icon">
                 <i className={iconClassName}></i>
             </span>
-            <spam>{props.children}</spam>
+            <span>{props.children}</span>
         </a>
     )
 }

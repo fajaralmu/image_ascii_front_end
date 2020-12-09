@@ -99,14 +99,14 @@ export const InputField = (props) => {
                     <div className="control">
                         {props.required == true ?
                             props.type == 'textarea' ?
-                                <textarea required className={className + " textarea"} id={'input-form-field-' + props.name} name={props.name}></textarea>
+                                <textarea {...props.attributes} required className={className + " textarea"} id={'input-form-field-' + props.name} name={props.name}></textarea>
                                 :
-                                <input required type={props.type ? props.type : 'text'} id={'input-form-field-' + props.name} name={props.name} className={className} />
+                                <input {...props.attributes} required type={props.type ? props.type : 'text'} id={'input-form-field-' + props.name} name={props.name} className={className} />
                             :
                             props.type == 'textarea' ?
-                                <textarea className={className + " textarea"} id={'input-form-field-' + props.name} name={props.name}></textarea>
+                                <textarea {...props.attributes} className={className + " textarea"} id={'input-form-field-' + props.name} name={props.name}></textarea>
                                 :
-                                <input type={props.type ? props.type : 'text'} id={'input-form-field-' + props.name} name={props.name} className={className} />
+                                <input {...props.attributes} type={props.type ? props.type : 'text'} id={'input-form-field-' + props.name} name={props.name} className={className} />
                         }
                         {props.note? 
                             <p><i>Note: {props.note}</i></p>
