@@ -256,8 +256,8 @@ export default class Characterizer extends BaseComponent {
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorFilter(index)} >
                                                 <Columns cells={[
-                                                    <InputField attributes={{ index: index + "_min", onChange: this.updateColorFilter }} orientation="vertical" name={"color_filter_" + index + "_min_rgb"} type="color" />
-                                                    , <InputField attributes={{ index: index + "_max", onChange: this.updateColorFilter }} orientation="vertical" name={"color_filter_" + index + "_max_rgb"} type="color" />
+                                                    <InputField label="min" attributes={{ index: index + "_min", onChange: this.updateColorFilter }}   name={"color_filter_" + index + "_min_rgb"} type="color" />
+                                                    , <InputField label="max" attributes={{ index: index + "_max", onChange: this.updateColorFilter }}  name={"color_filter_" + index + "_max_rgb"} type="color" />
                                                 ]} />
                                                 <InputField
                                                     name={"color_filter_" + index + "_character"}
@@ -282,11 +282,11 @@ export default class Characterizer extends BaseComponent {
                                         const filter = this.state.colorReducers[key];
                                         const index = filter.index;
                                         return (
-                                            <Card key={"card_Reducers_" + uniqueId()} title={"Filter #" + (i + 1)}
+                                            <Card key={"card_Reducers_" + uniqueId()} title={"Reducer #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorReducer(index)} >
 
-                                                <InputField attributes={{ index: index, onChange: this.updateColorReducer }} orientation="vertical" name={"color_reducer_" + index} type="color" />
+                                                <InputField attributes={{ index: index, onChange: this.updateColorReducer }} orientation="horizontal" label="color" name={"color_reducer_" + index} type="color" />
 
                                                 <div className="tags has-addons">
                                                     <span className="tag is-danger"><b>Red</b>&nbsp;&nbsp; {filter.red} </span>
