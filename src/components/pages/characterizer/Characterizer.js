@@ -53,7 +53,10 @@ export default class Characterizer extends BaseComponent {
             activeReducerIndex: 1
         }
         this.characterizerService = ImageCharacterizerService.instance;
-
+        this.addColorFilterAndReducer = (e) => {
+            this.addColorFilter();
+            this.addColorReducer();
+        }
         this.addColorFilter = (e) => {
             const colorFilters = this.state.colorFilters;
             const index = this.getMaxColorFiltersID() + 1;
@@ -263,26 +266,27 @@ export default class Characterizer extends BaseComponent {
         }
 
         this.onGetRgb = (rgb) => {
-            const index = this.state.activeFilterIndex;
+            const filterIndex = this.state.activeFilterIndex;
+            const reducerIndex = this.state.activeReducerIndex;
             const colorFilters = this.state.colorFilters;
             const colorReducers = this.state.colorReducers;
-            if (colorFilters.hasOwnProperty(index)) {
-                colorFilters[index].red.max = rgb.r;
-                colorFilters[index].green.max = rgb.g;
-                colorFilters[index].blue.max = rgb.b;
-                colorFilters[index].hexMax = rgb.hex;
+            if (colorFilters.hasOwnProperty(filterIndex)) {
+                colorFilters[filterIndex].red.max = rgb.r;
+                colorFilters[filterIndex].green.max = rgb.g;
+                colorFilters[filterIndex].blue.max = rgb.b;
+                colorFilters[filterIndex].hexMax = rgb.hex;
 
-                colorFilters[index].red.min = rgb.r;
-                colorFilters[index].green.min = rgb.g;
-                colorFilters[index].blue.min = rgb.b;
-                colorFilters[index].hexMin = rgb.hex;
+                colorFilters[filterIndex].red.min = rgb.r;
+                colorFilters[filterIndex].green.min = rgb.g;
+                colorFilters[filterIndex].blue.min = rgb.b;
+                colorFilters[filterIndex].hexMin = rgb.hex;
                
             }
-            if (colorReducers.hasOwnProperty(index)) {
-                colorReducers[index].red = rgb.r;
-                colorReducers[index].green = rgb.g;
-                colorReducers[index].blue = rgb.b;
-                colorReducers[index].hex = rgb.hex;
+            if (colorReducers.hasOwnProperty(reducerIndex)) {
+                colorReducers[reducerIndex].red = rgb.r;
+                colorReducers[reducerIndex].green = rgb.g;
+                colorReducers[reducerIndex].blue = rgb.b;
+                colorReducers[reducerIndex].hex = rgb.hex;
             }
 
             this.setState({ colorReducers: colorReducers, colorFilters: colorFilters });
@@ -335,7 +339,13 @@ export default class Characterizer extends BaseComponent {
                                     })}
 
                                 </div>
-                                <LabelField label="Option"><AnchorWithIcon className="is-light" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon></LabelField>
+                                <LabelField label="Option">
+                                    <div>
+                                    <AnchorWithIcon className="is-light" onClick={this.addColorFilter} iconClassName="fas fa-plus">Add Filter Color</AnchorWithIcon>
+                                    <p></p>
+                                    <AnchorWithIcon className="is-dark" onClick={this.addColorFilterAndReducer} iconClassName="fas fa-plus">Add Filter And Reducer</AnchorWithIcon>
+                                    </div>
+                                </LabelField>
                                 <div className="field">
                                     <p className="has-text-centered has-background-warning">Color Reducers <span className="tag is-dark">{Object.keys(this.state.colorReducers).length}</span></p>
                                     <div className="columns is-multiline">
