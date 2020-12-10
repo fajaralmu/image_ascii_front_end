@@ -107,38 +107,42 @@ export default class Characterizer extends BaseComponent {
             colorFilters[index].character = target.value;
             this.setState({ colorFilters: colorFilters });
         }
-        this.updateColorFilter = (e) => {
+        this.updateColorFilter = (index) => {
+            const minInput = document.getElementById("input-form-field-color_filter_"+index+"_min_rgb");
+            const maxInput = document.getElementById("input-form-field-color_filter_"+index+"_max_rgb");
+            const minValue = minInput.value;
+            const maxValue = maxInput.value;
+            this.updateColorFilterState(index, minValue, "min");
+            this.updateColorFilterState(index, maxValue, "max");
+        }
+        this.updateColorFilterState = (index, value, type) => {
 
             const colorFilters = this.state.colorFilters;
-            const target = e.target;
-            const indexRaw = target.getAttribute("index").split("_");
-            const index = indexRaw[0];
-            const type = indexRaw[1];
-            const rgb = hexToRgb(target.value);
+            const rgb = hexToRgb(value);
 
             if (type == "max") {
                 colorFilters[index].red.max = rgb.r;
                 colorFilters[index].green.max = rgb.g;
                 colorFilters[index].blue.max = rgb.b;
-                colorFilters[index].hexMax = target.value;
+                colorFilters[index].hexMax = value;
             } else {
                 colorFilters[index].red.min = rgb.r;
                 colorFilters[index].green.min = rgb.g;
                 colorFilters[index].blue.min = rgb.b;
-                colorFilters[index].hexMin = target.value;
+                colorFilters[index].hexMin = value;
             }
 
             this.setState({ colorFilters: colorFilters });
-            console.debug("RGB: ", rgb, " of ", target.value);
         }
 
-        this.updateColorReducer = (e) => {
+        this.updateColorReducer = (index) => {
+            const input = document.getElementById("input-form-field-color_reducer_"+index);
+            const value = input.value;
+            this.updateColorReducerState(index, value);
+        }
+        this.updateColorReducerState = (index, hex) => {
 
             const colorReducers = this.state.colorReducers;
-            const id = e.target.id;
-            const target = document.getElementById(id);
-            const index = target.getAttribute("index");
-            const hex = target.value;
             const rgb = hexToRgb(hex);
             colorReducers[index].red = rgb.r;
             colorReducers[index].green = rgb.g;
@@ -326,14 +330,20 @@ export default class Characterizer extends BaseComponent {
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorFilter(index)} >
                                                 <Columns cells={[
-                                                    <InputField label="min" attributes={{ index: index + "_min", onChange: this.updateColorFilter }} name={"color_filter_" + index + "_min_rgb"} type="color" />
-                                                    , <InputField label="max" attributes={{ index: index + "_max", onChange: this.updateColorFilter }} name={"color_filter_" + index + "_max_rgb"} type="color" />
+                                                    <InputField label="min" attributes={{ index: index + "_min",  }} name={"color_filter_" + index + "_min_rgb"} type="color" />
+                                                    , <InputField label="max" attributes={{ index: index + "_max",  }} name={"color_filter_" + index + "_max_rgb"} type="color" />
                                                 ]} />
-                                                <InputField
-                                                    attributes={{ index: index, onKeyUp: this.updateFilterCharacter }}
-                                                    label="character" name={"color_filter_" + index + "_character"} />
+                                                 <Columns cells={[
+                                                    <InputField attributes={{ index: index, onKeyUp: this.updateFilterCharacter }}
+                                                        label="character" name={"color_filter_" + index + "_character"} />,
+                                                    <div>
+                                                        <AnchorWithIcon onClick={(e)=> this.updateColorFilter(index)} className="is-small" iconClassName="fas fa-play">Apply</AnchorWithIcon>
+                                                        <ButtonToggleActive active={active} onClick={(e) => this.setState({ activeFilterIndex: index })} />
+                                                    </div>
+                                                    
+                                                 ]}/>
                                                 <RBGTagMinMax filter={filter} />
-                                                <ButtonToggleActive active={active} onClick={(e) => this.setState({ activeFilterIndex: index })} />
+                                                
                                             </Card>
                                         )
                                     })}
@@ -358,10 +368,11 @@ export default class Characterizer extends BaseComponent {
                                                     <Card key={"card_Reducers_" + uniqueId()} title={"Reducer #" + (i + 1)}
                                                         headerIconClassName="fas fa-times" headerIconOnClick={(e) => this.removeColorReducer(index)} >
 
-                                                        <InputField attributes={{ index: index, onChange: this.updateColorReducer }}
+                                                        <InputField attributes={{ index: index}}
                                                             orientation="horizontal" label="color" name={"color_reducer_" + index} type="color" />
 
                                                         <RGBTag filter={filter} />
+                                                        <AnchorWithIcon onClick={(e)=> this.updateColorReducer(index)} className="is-small" iconClassName="fas fa-play">Apply</AnchorWithIcon>
                                                         <ButtonToggleActive active={active} onClick={(e) => this.setState({ activeReducerIndex: index })} />
                                                     </Card>
                                                 </div>)
