@@ -387,10 +387,11 @@ export default class Characterizer extends BaseComponent {
                 <Card title="Result">
 
                     {this.state.result ?
-                        <>
-                            <AnchorWithIcon onClick={this.increaseResultFontSize} iconClassName="fas fa-plus">Zoom In</AnchorWithIcon>
-                            <AnchorWithIcon onClick={this.reduceResultFontSize} iconClassName="fas fa-minus">Zoom Out</AnchorWithIcon>
-
+                        <>  
+                        <div className="buttons has-addons">
+                            <AnchorWithIcon onClick={this.increaseResultFontSize} iconClassName="fas fa-plus" />
+                            <AnchorWithIcon onClick={this.reduceResultFontSize} iconClassName="fas fa-minus" /> 
+                        </div>
                             <div style={{ overflow: 'scroll', fontFamily: 'monospace' }}>
                                 {this.state.resultFontSize}
                                 <div style={{ fontSize: this.state.resultFontSize + 'em' }} >
