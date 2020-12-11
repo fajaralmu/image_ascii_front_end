@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
 import NotFound from './../pages/errors/NotFound';
-import Characterizer from './../pages/characterizer/Characterizer';
+import ImageAscii from '../pages/characterizer/ImageAscii';
 import Home from './../pages/Home';
 
 class Content extends Component {
@@ -22,9 +22,9 @@ class Content extends Component {
               <Home app={this.props.app} />
           } />
           
-          <Route path="/characterizer" render={
+          <Route path="/imageascii" render={
             (props) =>
-              <Characterizer app={this.props.app} />
+              <ImageAscii app={this.props.app} />
           } />
           
           {/* ////////////404///////////////// */}

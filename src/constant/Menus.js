@@ -8,9 +8,9 @@ export const MENUS = [
                 link: '/home',
                 iconClassName: 'fas fa-home',
             }, {
-                name: 'Characterized',
-                link: '/characterizer',
-                iconClassName: 'fas fa-tachometer-alt',
+                name: 'Image Ascii',
+                link: '/imageascii',
+                iconClassName: 'fas fa-font',
                 // authenticated: true,
             }]
     }, {

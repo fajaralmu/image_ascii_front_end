@@ -1,14 +1,14 @@
 
 import React, { Component } from 'react';
-import BaseComponent from './../../BaseComponent';
-import Section from './../../layout/Section';
-import ImageCharacterizerService from './../../../services/ImageCharacterizerService';
-import Card from './../../container/Card';
-import { SubmitResetButton, InputField, LabelField } from './../../forms/commons';
-import { toBase64v2 } from './../../../utils/ComponentUtil';
-import { AnchorWithIcon } from './../../buttons/buttons';
-import Columns from './../../container/Columns';
-import { uniqueId } from './../../../utils/StringUtil';
+import BaseComponent from '../../BaseComponent';
+import Section from '../../layout/Section';
+import ImageCharacterizerService from '../../../services/ImageCharacterizerService';
+import Card from '../../container/Card';
+import { SubmitResetButton, InputField, LabelField } from '../../forms/commons';
+import { toBase64v2 } from '../../../utils/ComponentUtil';
+import { AnchorWithIcon } from '../../buttons/buttons';
+import Columns from '../../container/Columns';
+import { uniqueId } from '../../../utils/StringUtil';
 import PreviewCanvas from './PreviewCanvas';
 const DEFAULT_REDUCER = {
     1: { index: 1, red: 0, green: 0, blue: 0, hex: '#000000' },
@@ -39,7 +39,7 @@ const DEFAULT_FILTER = {
     }
 };
 
-export default class Characterizer extends BaseComponent {
+export default class ImageAscii extends BaseComponent {
     constructor(props) {
         super(props, false);
         this.state = {
@@ -306,8 +306,8 @@ export default class Characterizer extends BaseComponent {
     render() {
 
         return (
-            <Section>    {this.title("Characterizer")}
-                <Card title="Image Characterizer" >
+            <Section>    {this.title("Image Ascii")}
+                <Card title="Image Ascii" >
                     <div className="columns">
                         <div className="column">
                             <form onSubmit={this.characterize}>
