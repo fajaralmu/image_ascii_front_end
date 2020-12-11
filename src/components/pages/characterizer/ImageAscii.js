@@ -51,7 +51,8 @@ export default class ImageAscii extends BaseComponent {
             resultFontSize: 1,
             percentage: 17,
             activeFilterIndex: 1,
-            activeReducerIndex: 1
+            activeReducerIndex: 1,
+            showForm:true
         }
         this.characterizerService = ImageCharacterizerService.instance;
         this.addColorFilterAndReducer = (e) => {
@@ -182,7 +183,7 @@ export default class ImageAscii extends BaseComponent {
         }
 
         this.handleSuccess = (response) => {
-            this.showInfo("Success");
+            // this.showInfo("Success");
             this.setState({ result: response });
         }
         this.handleError = (e) => {
@@ -278,6 +279,9 @@ export default class ImageAscii extends BaseComponent {
 
             this.setState({ colorReducers: colorReducers, colorFilters: colorFilters });
         }
+        this.toggleForm = (e) => {
+            this.setState({showForm:!this.state.showForm});
+        }
     }
 
     componentDidMount() {
@@ -293,7 +297,8 @@ export default class ImageAscii extends BaseComponent {
                 <Card title="Image Ascii" >
                     <div className="columns">
                         <div className="column">
-                            <form onSubmit={this.characterize}>
+                            <AnchorWithIcon style={{marginBottom:'20px'}} iconClassName={this.state.showForm?"fas fa-angle-up":"fas fa-angle-down"} onClick={this.toggleForm}>Toggle Form</AnchorWithIcon>
+                            <form style={{display:this.state.showForm?"block":"none"}} onSubmit={this.characterize}>
                                 <InputField required={true} name="Image" type="file" attributes={{
                                     accept: 'image/*', onChange: this.fileOnChange
                                 }} />
@@ -309,7 +314,7 @@ export default class ImageAscii extends BaseComponent {
                                         const active = this.state.activeFilterIndex == index;
                                         return (
 
-                                            <Card key={"card_filter_" + uniqueId()} title={"Filter #" + (i + 1)}
+                                            <Card className={active?"has-background-warning":null} key={"card_filter_" + uniqueId()} title={"Filter #" + (i + 1)}
                                                 headerIconClassName="fas fa-times"
                                                 headerIconOnClick={(e) => this.removeColorFilter(index)} >
                                                 <Columns cells={[
@@ -348,7 +353,7 @@ export default class ImageAscii extends BaseComponent {
                                             const active = this.state.activeReducerIndex == index;
                                             return (
                                                 <div className="column is-half">
-                                                    <Card key={"card_Reducers_" + uniqueId()} title={"Reducer #" + (i + 1)}
+                                                    <Card className={active?"has-background-warning":null} key={"card_Reducers_" + uniqueId()} title={"Reducer #" + (i + 1)}
                                                         headerIconClassName="fas fa-times" headerIconOnClick={(e) => this.removeColorReducer(index)} >
 
                                                         <InputField attributes={{ index: index}}

@@ -27,7 +27,7 @@ export default class Card extends Component {
         const iconOnClick = this.props.headerIconOnClick;
 
         return (
-            <div className="card" style={{ margin: '10px', ...this.props.style }}>
+            <div className={"card "+this.props.className} style={{ margin: '10px', ...this.props.style }}>
                 <header className="card-header">
                     <p className="card-header-title">
                         {this.props.title ? this.props.title : "Card Title"}
