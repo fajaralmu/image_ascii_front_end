@@ -5,6 +5,7 @@ import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
 import NotFound from './../pages/errors/NotFound';
 import ImageAscii from '../pages/characterizer/ImageAscii';
 import Home from './../pages/Home';
+import About from './../pages/About';
 
 class Content extends Component {
 
@@ -25,6 +26,10 @@ class Content extends Component {
           <Route path="/imageascii" render={
             (props) =>
               <ImageAscii app={this.props.app} />
+          } />
+          <Route path="/about" render={
+            (props) =>
+              <About app={this.props.app} />
           } />
           
           {/* ////////////404///////////////// */}

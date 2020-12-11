@@ -10,6 +10,7 @@ import { AnchorWithIcon } from '../../buttons/buttons';
 import Columns from '../../container/Columns';
 import { uniqueId } from '../../../utils/StringUtil';
 import PreviewCanvas from './PreviewCanvas';
+import { getMaxIndex, hexToRgb, objectToArray } from './helper';
 const DEFAULT_REDUCER = {
     1: { index: 1, red: 0, green: 0, blue: 0, hex: '#000000' },
     2: { index: 2, red: 255, green: 255, blue: 255, hex: '#ffffff' },
@@ -153,30 +154,12 @@ export default class ImageAscii extends BaseComponent {
 
         this.getMaxColorReducersID = () => {
             const colorReducers = this.state.colorReducers;
-            let max = 0;
-            for (const key in colorReducers) {
-                if (colorReducers.hasOwnProperty(key)) {
-                    const element = colorReducers[key];
-                    if (element.index > max) {
-                        max = element.index;
-                    }
-                }
-            }
-            return max;
+            return getMaxIndex(colorReducers);
         }
 
         this.getMaxColorFiltersID = () => {
             const colorFilters = this.state.colorFilters;
-            let max = 0;
-            for (const key in colorFilters) {
-                if (colorFilters.hasOwnProperty(key)) {
-                    const element = colorFilters[key];
-                    if (element.index > max) {
-                        max = element.index;
-                    }
-                }
-            }
-            return max;
+            return getMaxIndex(colorFilters);
         }
 
 
@@ -380,7 +363,7 @@ export default class ImageAscii extends BaseComponent {
                                     </div>
                                 </div>
                                 <LabelField label="Option"><AnchorWithIcon className="is-warning" onClick={this.addColorReducer} iconClassName="fas fa-plus">Add Reducer Color</AnchorWithIcon></LabelField>
-                                <SubmitResetButton />
+                                <SubmitResetButton submitIconClassName="fas fa-play" submitText="Process"/>
                             </form>
                         </div>
                         <div className="column has-text-centered">
@@ -448,21 +431,4 @@ const RGBTag = (props) => {
         </div>
     )
 }
-const objectToArray = (object) => {
-    const array = [];
-    for (const key in object) {
-        if (object.hasOwnProperty(key)) {
-            const element = object[key];
-            array.push(element);
-        }
-    }
-    return array;
-}
-const hexToRgb = function (hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
+

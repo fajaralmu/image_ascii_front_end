@@ -4,7 +4,7 @@ export const AnchorWithIcon = (props) => {
     const className = props.className;
     const iconClassName = props.iconClassName;
     return (
-        <a className={"button " +className} style={props.style} onClick={props.onClick}>
+        <a {...props.attributes} className={"button " +className} style={props.style} onClick={props.onClick}>
             <span className="icon">
                 <i className={iconClassName}></i>
             </span>

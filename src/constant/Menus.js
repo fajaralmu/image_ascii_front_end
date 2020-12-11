@@ -1,7 +1,7 @@
 
 export const MENUS = [
     {
-        name: 'Umum',
+        name: 'General',
         children: [
             {
                 name: 'Home',
